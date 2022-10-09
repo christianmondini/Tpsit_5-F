@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX 233
 #define MIN 1
+
+#define randnum(min, max) ((rand() % (int)(((max) + 1) - (min))) + (min)) // genera numeri random in un certo range di valori
 
 void Insertarray(int array[], int length)
 {
@@ -11,8 +14,7 @@ void Insertarray(int array[], int length)
     int result = 0;
     for (int i = 0; i < length; i++)
     {
-        // srand(time(NULL));
-        result = (rand() % (MAX - MIN)) + MIN;
+        result = randnum(MIN, MAX);
         array[i] = result;
         if (i > 1) // Se sono almeno 2 numeri
         {
@@ -21,7 +23,7 @@ void Insertarray(int array[], int length)
                 if (array[j] == array[i])
                 {
                     // printf("Generazione");
-                    controllo = (rand() % (MAX - MIN)) + MIN;
+                    controllo = randnum(MIN, MAX);
                     array[i] = controllo;
                     j = 0;
                 }
@@ -34,7 +36,7 @@ void Insertarray(int array[], int length)
                 printf("Primi 2 doppi\n");
                 do // Genero altro numero diverso da quello precedentemente generato
                 {
-                    controllo = (rand() % (MAX - MIN)) + MIN;
+                    controllo = randnum(MIN, MAX);
                 } while (controllo == result);
                 array[i] == controllo;
             }
@@ -66,82 +68,117 @@ void Controllo(int array[], int length)
     printf("I doppioni sono %d\n", doppioni);
 }
 
-void Ordinaarray(int array[], int length)
+void OrdinaArray(int array[], int length)
 {
     int temp;
-    for (int i = 0; i < (length-1);)
+    for (int i = 0; i < (length - 1);)
     {
 
-        if (array[i] > array[i+1])
+        if (array[i] > array[i + 1])
         {
             temp = array[i];
-            array[i] = array[i+1];
-            array[i+1] = temp;
-            i=0;
-        }else{
-             i++;
+            array[i] = array[i + 1];
+            array[i + 1] = temp;
+            i = 0;
+        }
+        else
+        {
+            i++;
         }
     }
 }
 
-void Pari(int array[],int pari[],int length){
-    int temp;
-    int counterpari=0;
-    for(int i=0;i<(length-1);i++){
-        if(array[i]%2==0){
-            printf("pari trovato alla posizione %d\n",i);
-            if(i>19){
-                for(int j=0;j<20;j++){
-                    if(array[j]%2!=0){
-                        temp=array[j];
-                        array[j]=array[i];
-                        array[i]=temp;
-                        pari[counterpari]=array[j];
-                        counterpari++;
-                    }
-                }
-            }
+void OrdinaArrayContrario(int array[],int length){
+     int temp;
+    for (int i = 0; i < (length - 1);)
+    {
+
+        if (array[i] < array[i + 1])
+        {
+            temp = array[i];
+            array[i] = array[i + 1];
+            array[i + 1] = temp;
+            i = 0;
+        }
+        else
+        {
+            i++;
         }
     }
-
 }
 
-void Dispari(int array[], int dispari[]){
+int Pari(int array[], int pari[])
+{
+    int counterpari = 0;
+    for (int i = 0; i < 40; i++)
+    {
+        if (array[i] % 2 == 0 && counterpari < 20)
+        {
+            // printf("pari trovato alla posizione %d\n", i);
+            pari[counterpari] = array[i];
+            counterpari++;
+        }
+    }
+    return counterpari;
+}
 
+int Dispari(int array[], int dispari[])
+{
+    int counterd = 0;
+    for (int i = 0; i < 40; i++)
+    {
+        if (array[i] % 2 != 0 && counterd < 20)
+        {
+            // printf("pari trovato alla posizione %d\n", i);
+            dispari[counterd] = array[i];
+            counterd++;
+        }
+    }
+    return counterd;
+}
+
+void PrintArray(int array[],int length,char nome[]){
+    for (int i = 0; i < length; i++)
+    {
+        printf("Ecco l'array %s [%d]: %d\n",nome, i, array[i]);
+    }
+    printf("\n");
+}
+
+void RifaiArray(int sorgente[],int destinazione[],int length,int partenza){
+    for(int i=0;i<length;i++){
+        destinazione[i+partenza]=sorgente[i];
+    }
 
 }
 
 int main()
 {
+    srand(time(NULL));
     int array[100];
+    char arraynome[]="normale";
     int length = 100;
     Insertarray(array, length);
-    /*for (int i = 0; i < length; i++)
-    {
-        printf("Il %d numero dell'array è %d\n", (i + 1), array[i]);
-    }*/
-
-    // Controllo(array,length);
-    //printf("\nOrdinato:\n");
-    Ordinaarray(array, length);
-    /*for (int i = 0; i < length; i++)
-    {
-        printf("Il %d numero dell'array è %d\n", (i + 1), array[i]);
-    }*/
+   
+    OrdinaArray(array, length);
+    PrintArray(array,length,arraynome);
 
     int pari[20];
     int dispari[20];
+    char parinome[]="di pari";
+    char disparinome[]="di dispari";
 
-    Pari(array,pari,length);
-    for (int i = 0; i < length; i++)
-    {
-        printf("Il %d numero dell'array è %d\n", (i + 1), array[i]);
-    }
-    for (int i = 0; i < 20; i++)
-    {
-        printf("Il %d numero dell'array pari è %d\n", (i + 1), pari[i]);
-    }
+    int counterpari = Pari(array, pari);
+    int counterd = Dispari(array, dispari);
 
+    PrintArray(pari,counterpari,parinome);
+    OrdinaArrayContrario(dispari,counterd);
+    PrintArray(dispari,counterd,disparinome);
 
+    RifaiArray(pari,array,counterpari,0);
+    RifaiArray(dispari,array,counterd,20);
+
+    PrintArray(array,length,arraynome);
+    Controllo(array,length);
     return 0;
 }
