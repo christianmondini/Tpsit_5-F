@@ -3,151 +3,112 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 233
-#define MIN 1
+#define DIM 100
 
-#define randnum(min, max) ((rand() % (int)(((max) + 1) - (min))) + (min)) // genera numeri random in un certo range di valori
+void CreaArray(int array[],int dimensione,int *pari,int *dispari){
+    int num;
+    for(int i=0;i<dimensione;i++){
+        num= 1 + rand() % 233;
+        for(int j=0;j<=i;j++){
+            if(array[j]==num){
+                i--;
+                break;
+            }
+            if(j==i){
+                 if(num%2==0){
+                        (*pari)++;
+                   }else
+                    {
+                        (*dispari)++;
+                    }
+                
+            array[i]=num;
+            }
 
-void Insertarray(int array[], int length)
-{
-    int controllo = 0;
-    int result = 0;
-    for (int i = 0; i < length; i++)
-    {
-        result = randnum(MIN, MAX);
-        array[i] = result;
-        if (i > 1) // Se sono almeno 2 numeri
-        {
-            for (int j = 0; j < (i - 1); j++) // controllo che non ci siano doppioni ed in caso genero un altro numero dicerso da tutti gli altri
-            {
-                if (array[j] == array[i])
-                {
-                    // printf("Generazione");
-                    controllo = randnum(MIN, MAX);
-                    array[i] = controllo;
-                    j = 0;
-                }
+           
+        }
+
+    }
+}
+
+void PrintArray(int array[],int dimensione){
+    for(int i=0;i<dimensione;i++){
+        printf("%d) %d\n",(i+1),array[i]);
+    }
+}
+
+void Ordina(int array[],int dimensione){
+    for(int i=0;i<dimensione;i++){
+          for(int j=0;j<dimensione;j++){
+            if(array[j]>array[j+1]){
+                int temp=array[j];
+                array[j]=array[j+1];
+                array[j+1]=temp;
+            }
+          }
+    }
+}
+
+void OrdinaContrario(int array[],int dimensione){
+     for(int i=0;i<dimensione;i++){
+          for(int j=0;j<dimensione;j++){
+            if(array[j]<array[j+1]){
+                int temp=array[j];
+                array[j]=array[j+1];
+                array[j+1]=temp;
+            }
+          }
+    }
+}
+
+/*void Ordina1(int array[],int dimensione){
+    for(int i=0;i<dimensione;i++){
+            if(array[i]>array[i+1]){
+                int temp=array[i];
+                array[i]=array[i+1];
+                array[i+1]=temp;
+                i=-1;
+            }
+    }
+}*/
+
+void Controllo(int array[],int dimensione){
+    for(int i=0;i<dimensione;i++){
+        for(int j=(i+1);j<dimensione;j++){
+           if(array[i]==array[j]){
+                printf("Trovato dopione al posto %d e %d\n",(i+1),(j+1));
             }
         }
-        else if (i == 1) // Se sono solo i primi 2 numeri
-        {
-            if (array[0] == array[1])
-            {
-                printf("Primi 2 doppi\n");
-                do // Genero altro numero diverso da quello precedentemente generato
-                {
-                    controllo = randnum(MIN, MAX);
-                } while (controllo == result);
-                array[i] == controllo;
+       
+    }
+}
+
+void PariDispari(int array[],int pari [],int dispari[],int dimensione,int *p,int *d){
+    for(int i=0;i<dimensione;i++){
+        if(array[i]%2==0){
+            pari[*p]=array[i];
+            (*p)++;
+        }else{
+            dispari[*d]=array[i];
+            (*d)++;
+        }
+    }
+
+    Ordina(pari,*p);
+    OrdinaContrario(dispari,*d);
+}
+
+void Ordinafinale(int array[],int inizio,int dimensione){
+    for(int i=inizio;i<dimensione;i++){
+        for(int j=inizio;j<dimensione;j++){
+            if(array[j]>array[j+1]){
+
+                int temp=array[j];
+                array[j]=array[j+1];
+                array[j+1]=temp;
             }
+
         }
-        /*else if (i == 0)
-        {
-            printf("Primo\n");
-        }*/
-    }
-}
-
-void Controllo(int array[], int length)
-{
-    int doppioni = 0;
-    for (int i = 0; i < length; i++)
-    {
-        if (i > 1)
-        {
-            for (int j = 0; j < (i - 1); j++)
-            {
-                if (array[j] == array[i])
-                {
-                    printf("Trovato doppione al posto %d e %d\n", j, i);
-                    doppioni++;
-                }
-            }
-        }
-    }
-    printf("I doppioni sono %d\n", doppioni);
-}
-
-void OrdinaArray(int array[], int length)
-{
-    int temp;
-    for (int i = 0; i < (length - 1);)
-    {
-
-        if (array[i] > array[i + 1])
-        {
-            temp = array[i];
-            array[i] = array[i + 1];
-            array[i + 1] = temp;
-            i = 0;
-        }
-        else
-        {
-            i++;
-        }
-    }
-}
-
-void OrdinaArrayContrario(int array[],int length){
-     int temp;
-    for (int i = 0; i < (length - 1);)
-    {
-
-        if (array[i] < array[i + 1])
-        {
-            temp = array[i];
-            array[i] = array[i + 1];
-            array[i + 1] = temp;
-            i = 0;
-        }
-        else
-        {
-            i++;
-        }
-    }
-}
-
-int Pari(int array[], int pari[])
-{
-    int counterpari = 0;
-    for (int i = 0; i < 40; i++)
-    {
-        if (array[i] % 2 == 0 && counterpari < 20)
-        {
-            // printf("pari trovato alla posizione %d\n", i);
-            pari[counterpari] = array[i];
-            counterpari++;
-        }
-    }
-    return counterpari;
-}
-
-int Dispari(int array[], int dispari[])
-{
-    int counterd = 0;
-    for (int i = 0; i < 40; i++)
-    {
-        if (array[i] % 2 != 0 && counterd < 20)
-        {
-            // printf("pari trovato alla posizione %d\n", i);
-            dispari[counterd] = array[i];
-            counterd++;
-        }
-    }
-    return counterd;
-}
-
-void PrintArray(int array[],int length,char nome[]){
-    for (int i = 0; i < length; i++)
-    {
-        printf("Ecco l'array %s [%d]: %d\n",nome, i, array[i]);
-    }
-    printf("\n");
-}
-
-void RifaiArray(int sorgente[],int destinazione[],int length,int partenza){
-    for(int i=0;i<length;i++){
-        destinazione[i+partenza]=sorgente[i];
     }
 
 }
@@ -155,30 +116,51 @@ void RifaiArray(int sorgente[],int destinazione[],int length,int partenza){
 int main()
 {
     srand(time(NULL));
-    int array[100];
-    char arraynome[]="normale";
-    int length = 100;
-    Insertarray(array, length);
-   
-    OrdinaArray(array, length);
-    PrintArray(array,length,arraynome);
+    int array[DIM],contapari=0,contadispari=0,d=0,p=0,k=0;
+    CreaArray(array,DIM,&contapari,&contadispari);
+    Ordina(array,DIM);
+    //PrintArray(array,DIM);
+    //Controllo(array,DIM);
+   /*printf("%d ECCOMI",contapari);
+    
+    printf("%d ECCOMI",contadispari);*/
+    int pari[contapari];
+    int dispari[contadispari];
 
-    int pari[20];
-    int dispari[20];
-    char parinome[]="di pari";
-    char disparinome[]="di dispari";
+    if(contapari>20){
+        contapari=20;
+    }
 
-    int counterpari = Pari(array, pari);
-    int counterd = Dispari(array, dispari);
+     if(contadispari>20){
+        contadispari=20;
+    }
 
-    PrintArray(pari,counterpari,parinome);
-    OrdinaArrayContrario(dispari,counterd);
-    PrintArray(dispari,counterd,disparinome);
+    PariDispari(array,pari,dispari,DIM,&p,&d);
+   /* PrintArray(pari,p);
+    PrintArray(dispari,d);*/
 
-    RifaiArray(pari,array,counterpari,0);
-    RifaiArray(dispari,array,counterd,20);
+    for(int i=contapari;i<p;i++){
+        array[contapari+contadispari+k]=pari[i];
+        k++;
+    }
 
-    PrintArray(array,length,arraynome);
-    Controllo(array,length);
+     for(int i=contadispari;i<d;i++){
+        array[contapari+contadispari+k]=dispari[i];
+        k++;
+    }
+
+      for (int i = 0; i < contapari; i++)
+    {
+        array[i] = pari[i];
+    }
+
+    for (int i = 0; i < contadispari; i++)
+    {
+        array[contapari+i] = dispari[i];
+    }
+    int inizio=contapari+contadispari;
+    Ordinafinale(array,inizio,DIM);
+    PrintArray(array,DIM);
+    Controllo(array,DIM);
     return 0;
 }
