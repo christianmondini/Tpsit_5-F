@@ -1,166 +1,139 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<ctype.h>
+#include<time.h>
 
 #define DIM 100
 
-void CreaArray(int array[],int dimensione,int *pari,int *dispari){
-    int num;
+
+int Controllanumero(int array[],int dimensione,int numero){
+    int doppione=0;
     for(int i=0;i<dimensione;i++){
-        num= 1 + rand() % 233;
-        for(int j=0;j<=i;j++){
-            if(array[j]==num){
-                i--;
-                break;
-            }
-            if(j==i){
-                 if(num%2==0){
-                        (*pari)++;
-                   }else
-                    {
-                        (*dispari)++;
-                    }
-                
-            array[i]=num;
-            }
-
-           
+        if(array[i]==numero){
+            doppione++;
+            break;
         }
+    }
+    return doppione;
+}
 
+void GeneraArray(int array[],int dimensione){
+    int num=0;
+    for(int i=0;i<dimensione;i++){
+        num= 1 + rand() % 232;
+        if(Controllanumero(array,i,num)==0 || i==0){
+            array[i]=num;
+        }else{
+            i--;
+        }
     }
 }
 
+
 void PrintArray(int array[],int dimensione){
     for(int i=0;i<dimensione;i++){
-        printf("%d) %d\n",(i+1),array[i]);
+        printf("[%d] %d\n",i,array[i]);
     }
+
 }
 
 void Ordina(int array[],int dimensione){
     for(int i=0;i<dimensione;i++){
-          for(int j=0;j<dimensione;j++){
-            if(array[j]>array[j+1]){
-                int temp=array[j];
-                array[j]=array[j+1];
-                array[j+1]=temp;
+        for(int j=i+1;j<dimensione;j++){
+            if(array[i]>array[j]){
+                int temp=array[i];
+                array[i]=array[j];
+                array[j]=temp;
             }
-          }
+        }
     }
 }
 
 void OrdinaContrario(int array[],int dimensione){
-     for(int i=0;i<dimensione;i++){
-          for(int j=0;j<dimensione;j++){
-            if(array[j]<array[j+1]){
-                int temp=array[j];
-                array[j]=array[j+1];
-                array[j+1]=temp;
-            }
-          }
-    }
-}
-
-/*void Ordina1(int array[],int dimensione){
     for(int i=0;i<dimensione;i++){
-            if(array[i]>array[i+1]){
+        for(int j=i+1;j<dimensione;j++){
+            if(array[i]<array[j]){
                 int temp=array[i];
-                array[i]=array[i+1];
-                array[i+1]=temp;
-                i=-1;
-            }
-    }
-}*/
-
-void Controllo(int array[],int dimensione){
-    for(int i=0;i<dimensione;i++){
-        for(int j=(i+1);j<dimensione;j++){
-           if(array[i]==array[j]){
-                printf("Trovato dopione al posto %d e %d\n",(i+1),(j+1));
+                array[i]=array[j];
+                array[j]=temp;
             }
         }
-       
     }
 }
 
-void PariDispari(int array[],int pari [],int dispari[],int dimensione,int *p,int *d){
-    for(int i=0;i<dimensione;i++){
-        if(array[i]%2==0){
-            pari[*p]=array[i];
-            (*p)++;
-        }else{
-            dispari[*d]=array[i];
-            (*d)++;
+void PariDispari(int array[],int dimensione,int pari[],int dispari[],int *n_pari,int *n_dispari){
+
+    for(int i = 0; i < dimensione; i++){
+        if(array[i] % 2 == 0 && *n_pari<20){
+            pari[*n_pari]=array[i];
+            (*n_pari)++;
+        }
+        
+        if(array[dimensione-i-1] % 2 != 0 && *n_dispari<20)
+        {
+            dispari[*n_dispari]=array[dimensione-i-1];
+            (*n_dispari)++;
         }
     }
-
-    Ordina(pari,*p);
-    OrdinaContrario(dispari,*d);
 }
 
-void Ordinafinale(int array[],int inizio,int dimensione){
-    for(int i=inizio;i<dimensione;i++){
-        for(int j=inizio;j<dimensione;j++){
-            if(array[j]>array[j+1]){
 
-                int temp=array[j];
-                array[j]=array[j+1];
-                array[j+1]=temp;
-            }
 
-        }
-    }
-
-}
-
-int main()
-{
+int main(){
     srand(time(NULL));
-    int array[DIM],contapari=0,contadispari=0,d=0,p=0,k=0;
-    CreaArray(array,DIM,&contapari,&contadispari);
+    int array[DIM];
+    GeneraArray(array,DIM);
     Ordina(array,DIM);
-    //PrintArray(array,DIM);
-    //Controllo(array,DIM);
-   /*printf("%d ECCOMI",contapari);
-    
-    printf("%d ECCOMI",contadispari);*/
-    int pari[contapari];
-    int dispari[contadispari];
-
-    if(contapari>20){
-        contapari=20;
-    }
-
-     if(contadispari>20){
-        contadispari=20;
-    }
-
-    PariDispari(array,pari,dispari,DIM,&p,&d);
-   /* PrintArray(pari,p);
-    PrintArray(dispari,d);*/
-
-    for(int i=contapari;i<p;i++){
-        array[contapari+contadispari+k]=pari[i];
-        k++;
-    }
-
-     for(int i=contadispari;i<d;i++){
-        array[contapari+contadispari+k]=dispari[i];
-        k++;
-    }
-
-      for (int i = 0; i < contapari; i++)
-    {
-        array[i] = pari[i];
-    }
-
-    for (int i = 0; i < contadispari; i++)
-    {
-        array[contapari+i] = dispari[i];
-    }
-    int inizio=contapari+contadispari;
-    Ordinafinale(array,inizio,DIM);
     PrintArray(array,DIM);
-    Controllo(array,DIM);
+
+    int pari[20];
+    int dispari[20];
+    int n_pari=0;
+    int n_dispari=0;
+
+    PariDispari(array,DIM,pari,dispari,&n_pari,&n_dispari);
+
+   /* printf("Array pari:\n");
+    PrintArray(pari,n_pari);*/
+    printf("Array dispari:\n");
+    PrintArray(dispari,n_dispari);
+
+    int restanti[80];
+    int n_restanti=0;
+
+    for(int i=0;i<DIM;i++){
+        if(array[i] % 2 == 0 && Controllanumero(pari,n_pari,array[i])==0){
+            restanti[n_restanti]=array[i];
+            n_restanti++;
+        }else if(array[i] % 2 != 0 && Controllanumero(dispari,n_dispari,array[i])==0)
+        {
+            restanti[n_restanti]=array[i];
+            n_restanti++;
+        }
+    }
+
+    int stamp[DIM];
+    int pos=0;
+
+    for(int i=0; i<n_pari;i++){
+        stamp[pos]=pari[i];
+        pos++;
+    }
+
+    for(int i=0; i<n_dispari;i++){
+        stamp[pos]=dispari[i];
+        pos++;
+    }
+
+    for(int i=0; i<n_restanti;i++){
+        stamp[pos]=restanti[i];
+        pos++;
+    }
+
+    printf("Finale:\n");
+    PrintArray(stamp,DIM);
+
+
     return 0;
 }
