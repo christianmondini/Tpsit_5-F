@@ -1,5 +1,4 @@
-//Mondini Christian 5^F esercizi finiti ma non ottimizzati
-
+// Mondini Christian 5^F esercizi finiti ma non ottimizzati
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,20 +37,16 @@ int Frequenza(int array[], int dimensione, int numero)
     return frequenza;
 }
 
-void Copia(int sorgente[], int destinazione[], int dimensione)
+void Copia(int sorgente[], int destinazione[], int dimensione, int dimensioned)
 {
-
+    int contatore = 0;
     for (int i = 0; i < dimensione; i++)
     {
-        /*if (Frequenza(destinazione, dimensioned, sorgente[i]) > 1)
+        if (Frequenza(destinazione, dimensioned, sorgente[i]) == 0 || contatore==0)
         {
+            destinazione[contatore] = sorgente[i];
+            contatore++;
         }
-        else
-        {
-
-            destinazione[i] = sorgente[i];
-        }*/
-        destinazione[i] = sorgente[i];
     }
 }
 
@@ -84,8 +79,6 @@ void PariDispari(int array[], int dimensione)
 }
 
 
-
-//WORK IN PROGRESS
 int Ridimensiona(int array[], int dimensione)
 {
     int doppi = 0;
@@ -99,13 +92,17 @@ int Ridimensiona(int array[], int dimensione)
             }
         }
     }
-    int dimensione2 = dimensione - doppi;
+    int dimensione2=dimensione; 
+
+    if(doppi>0) {
+        dimensione2 = dimensione2-(doppi-1);
+    }
+    
     return dimensione2;
 }
 
 
-//WORK IN PROGRESS
-void Swap(int doppio[], int num1, int num2,int dim2)
+void Swap(int doppio[], int num1, int num2, int dim2)
 {
     for (int i = 0; i < dim2; i++)
     {
@@ -122,51 +119,63 @@ void Swap(int doppio[], int num1, int num2,int dim2)
     }
 }
 
+
 int main()
 {
     srand(time(NULL));
-    int dim = 1 + rand() % 50; // dimensione casuale
+    int dim = 1 + rand() % 10; // dimensione casuale
     int array[dim];
     CreaArray(array, dim); // numeri casuali con possibili ripetizioni
     PrintArray(array, dim);
     int frequenza = 0;
 
-    for (int j = 0; j < dim; j++)
+    int dim2 = Ridimensiona(array, dim);
+    int controllo[dim2];
+
+    int contatore=0;
+
+    for (int i = 0; i < dim; i++)
     {
-        frequenza = Frequenza(array, dim, array[j]);
-        printf("Il valore %d compare %d volte nell'array.\n", array[j], frequenza);
+        frequenza=Frequenza(array,dim,array[i]);
+            if(Frequenza(controllo,dim,array[i])==0){
+                controllo[contatore]=array[i];
+                printf("Il valore %d compare %d volte nell'array.\n", controllo[contatore], frequenza);
+                contatore++;
+            }
+        
     }
 
-    /*int dim2 = Ridimensiona(array, dim);
-    int doppio[dim2];*/
+    
+    int doppio[dim2];
+    printf("La dimensione e' %d\n", dim2);
 
-    int doppio[dim];
-    Copia(array, doppio, dim);
+    Copia(array, doppio, dim, dim2);
+
+    PrintArray(doppio, dim2);
 
     for (int i = 0; i < dim; i++)
     {
         for (int j = (i + 1); j < dim; j++)
         {
-            if (Frequenza(doppio, dim, doppio[i]) < Frequenza(doppio, dim, doppio[j]))
+            if (Frequenza(array, dim, array[i]) < Frequenza(array, dim, array[j]))
             {
-
-                int temp = doppio[i];
-                doppio[i] = doppio[j];
-                doppio[j] = temp;
+                Swap(doppio, array[i], array[j], dim2);
             }
         }
     }
 
-
     printf("Array con frequenze maggiori in cima:\n");
 
-    PrintArray(doppio, dim);
+    PrintArray(doppio, dim2);
 
-    PariDispari(array, dim);
+    int paridispari[dim2];
+    Copia(array,paridispari,dim,dim2);
+
+    PariDispari(paridispari, dim2);
 
     printf("Array con pari e dispari ordinati:\n");
 
-    PrintArray(array, dim);
+    PrintArray(paridispari, dim2);
 
     return 0;
 }
