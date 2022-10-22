@@ -123,7 +123,7 @@ void Swap(int doppio[], int num1, int num2, int dim2)
 int main()
 {
     srand(time(NULL));
-    int dim = 1 + rand() % 10; // dimensione casuale
+    int dim = 1 + rand() % 200; // dimensione casuale
     int array[dim];
     CreaArray(array, dim); // numeri casuali con possibili ripetizioni
     PrintArray(array, dim);
@@ -147,11 +147,11 @@ int main()
 
     
     int doppio[dim2];
-    printf("La dimensione e' %d\n", dim2);
+    //printf("La dimensione e' %d\n", dim2);
 
     Copia(array, doppio, dim, dim2);
 
-    PrintArray(doppio, dim2);
+    //PrintArray(doppio, dim2);
 
     for (int i = 0; i < dim; i++)
     {
